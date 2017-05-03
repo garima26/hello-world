@@ -1,0 +1,24 @@
+#XDataDump 
+
+from time import time
+start_time = time()
+
+import subprocess
+import os
+from urllib import quote_plus as urlquote
+
+proxy = "garimaj[an_rt_ws04]/<password goes here>@exa_usmacprdh_an"
+
+cmd_str =   "xdatadump userid='" + str(proxy) \
+                + "' sqlstmt='select * from GJ_MK_TEST_DATA" \
+                +  "' delimiter=^ header=y > testdata.csv"        
+
+print(cmd_str)
+subprocess.call(cmd_str, cwd='./', shell=True)
+
+end_time = time()
+time_taken = end_time - start_time # time_taken is in seconds
+minutes, seconds = divmod(time_taken, 60)
+print("Import took %d minutes and %d seconds" %(minutes, seconds) )
+
+testdata = pd.read_csv('testdata.csv',header=0,delimiter ="^")
