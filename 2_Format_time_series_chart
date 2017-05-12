@@ -1,0 +1,29 @@
+plt.figure(figsize=(50,20),dpi=180)
+ax=plt.gca()
+plt.plot(merged_test['WK'],Y_test)
+plt.plot(merged_test['WK'],(0.5*Y_test_pred_rf+0.5*Y_test_pred_extra),'r--')
+
+########### FORMAT CHART ##########################################################
+## For more on date tickers, go to matplotlib.dates documentation
+# import constants for the days of the week
+from matplotlib.dates import MO, TU, WE, TH, FR, SA, SU
+from matplotlib.dates import WeekdayLocator, MonthLocator, DateFormatter
+# tick on every Sunday
+loc = WeekdayLocator(byweekday=SU, interval=1)
+ax.xaxis.set_minor_locator(loc)
+
+month_loc=MonthLocator()
+ax.xaxis.set_major_locator(month_loc)
+ax.xaxis.set_major_formatter(DateFormatter('%b-%Y'))
+plt.xticks(rotation='vertical', fontsize=20)
+plt.yticks(fontsize=20)
+plt.ylabel('Weekly brand sales',fontsize=30,labelpad=20)
+plt.xlabel('Weeks',fontsize=30,labelpad=20)
+ax.set_xlim([wk_start,wk_end])
+
+ax.spines['right'].set_visible(False)
+ax.spines['top'].set_visible(False)
+######################################################################################
+
+# September end
+plt.axvline('2016-09-30', color='y', ls=':')
