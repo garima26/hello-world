@@ -1,0 +1,24 @@
+import pandas as pd
+
+out=pd.DataFrame()
+
+for ns in range(0,12):
+    print ns,"starts here"
+    trans=sqlContext.sql("""select distinct guest_hshld_id from base where need_state="{}" """.format(ns))
+    trans.registerTempTable("trans")
+    a= trans.count()
+    
+    base2=sqlContext.sql("""select "{}" as parent_ns, "{}" as tot_cust, 
+                            need_state, count(distinct a.tn_id) as visits, 
+                            count(distinct a.guest_hshld_id) as customers
+                            from base a
+                            inner join trans b
+                            on a.guest_hshld_id=b.guest_hshld_id
+                            group by need_state""".format(ns,a))
+    
+    base2=base2.toPandas()
+    out=out.append(base2)
+
+    print ns,"ends here"                            
+
+out.to_csv("/nfs/science/shared/ipythonNotebooks/garimaj/McDonalds/ns_crossshop_cust_alldata.csv")
